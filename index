@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>🔥 توقع المباراة النهائية 🔥</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #1a1a1a;
+      font-family: 'Cairo', sans-serif;
+      padding-top: 100px;
+      color: white;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .navbar {
+      background-color: #000;
+      box-shadow: 0 0 15px red;
+    }
+
+    .navbar-brand {
+      font-weight: bold;
+      font-size: 24px;
+      color: #fff;
+    }
+
+    .logo-img {
+      height: 40px;
+      margin-left: 10px;
+    }
+
+    .match-title {
+      font-size: 36px;
+      text-align: center;
+      color: #ffcc00;
+      margin-bottom: 10px;
+    }
+
+    .team-names {
+      font-size: 28px;
+      text-align: center;
+      color: #eee;
+      margin-bottom: 20px;
+    }
+
+    .countdown {
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
+      background: #111;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      letter-spacing: 2px;
+      transition: all 0.5s ease;
+      box-shadow: 0 0 20px #0f0;
+    }
+
+    .card {
+      background: linear-gradient(145deg, #292929, #1a1a1a);
+      border: 1px solid #333;
+      border-radius: 15px;
+      padding: 25px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 0 15px #ff4500;
+    }
+
+    .form-label {
+      color: #ffcc00;
+    }
+
+    .btn-primary {
+      background-color: #ff4500;
+      border: none;
+    }
+
+    .btn-outline-dark {
+      border: 2px solid #fff;
+      color: #fff;
+    }
+
+    .alert {
+      font-size: 18px;
+    }
+
+    #resultsSection {
+      display: none;
+    }
+
+    /* Fire animation */
+    .fire {
+      position: absolute;
+      top: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 150px;
+      background: url('https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif') center center no-repeat;
+      background-size: contain;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    /* Smoke effect */
+    .smoke {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://i.imgur.com/Oa1uTeb.png') repeat;
+      opacity: 0.05;
+      animation: moveSmoke 60s linear infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes moveSmoke {
+      0% { background-position: 0 0; }
+      100% { background-position: 1000px 0; }
+    }
+
+    /* Lightning effect */
+    .lightning {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      opacity: 0;
+      z-index: 999;
+      pointer-events: none;
+      animation: flash 10s infinite;
+    }
+
+    @keyframes flash {
+      0%, 97%, 100% { opacity: 0; }
+      98% { opacity: 0.8; }
+      99% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fire, Smoke and Lightning Effects -->
+  <div class="smoke"></div>
+  <div class="lightning"></div>
+  <div class="fire"></div>
+
+  <!-- Sounds -->
+  <audio id="successSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_14cfae7c4d.mp3"></audio>
+  <audio id="errorSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_d9f57f2cb8.mp3"></audio>
+
+  <!-- Navbar -->
+  <nav class="navbar fixed-top navbar-dark">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <img src="logo.png" alt="Logo" class="logo-img" />
+        <span class="navbar-brand mb-0 h1">ELMOSTAMARA ONFIRE</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <section id="predictionSection">
+      <h1 class="match-title">🔥 توقع المباراة النهائية 🔥</h1>
+      <div class="team-names">المستعمرة VS السلسول</div>
+      <div class="countdown" id="countdownTimer">00:00:00</div>
+
+      <div class="card">
+        <form id="predictionForm">
+          <div class="mb-3">
+            <label for="name" class="form-label">👤 اسمك</label>
+            <input type="text" class="form-control" id="name" required />
+          </div>
+
+          <label class="form-label">🏆 الفريق الفائز:</label>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="winner" value="المستعمرة" />
+            <label class="form-check-label">المستعمرة</label>
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="radio" name="winner" value="السلسول" />
+            <label class="form-check-label">السلسول</label>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <label class="form-label">⚽ نتيجة المستعمرة</label>
+              <input type="number" class="form-control" id="score1" min="0" />
+            </div>
+            <div class="col">
+              <label class="form-label">⚽ نتيجة السلسول</label>
+              <input type="number" class="form-control" id="score2" min="0" />
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 mt-3" id="submitBtn">🚀 إرسال التوقع</button>
+        </form>
+        <div id="resultMessage" class="mt-3 text-center"></div>
+        <button onclick="showResults()" class="btn btn-outline-dark w-100 mt-3">📋 عرض التوقعات</button>
+      </div>
+    </section>
+
+    <section id="resultsSection">
+      <h2 class="text-center mt-5 mb-4">📋 التوقعات المسجلة</h2>
+      <div id="predictionsList" class="table-responsive"></div>
+      <div class="text-center mt-4">
+        <button onclick="showPredictionForm()" class="btn btn-outline-dark">🔙 الرجوع للتوقع</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const closeTime = new Date(2025, 8, 17, 18, 0, 0);
+    const countdownEl = document.getElementById("countdownTimer");
+    const submitBtn = document.getElementById("submitBtn");
+    const successSound = document.getElementById("successSound");
+    const errorSound = document.getElementById("errorSound");
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = closeTime - now;
+
+      if (distance <= 0) {
+        countdownEl.innerHTML = "🚫 تم إغلاق التوقعات";
+        countdownEl.style.color = "#888";
+        countdownEl.style.boxShadow = "none";
+        submitBtn.disabled = true;
+        errorSound.play();
+        return;
+      }
+
+      const hours = String(Math.floor((distance / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+      const minutes = String(Math.floor((distance / (1000 * 60)) % 60)).padStart(2, '0');
+      const seconds = String(Math.floor((distance / 1000) % 60)).padStart(2, '0');
+
+      countdownEl.innerHTML = `⏳ ${hours}:${minutes}:${seconds}`;
+
+      if (distance > 5 * 60 * 1000) {
+        countdownEl.style.color = "#0f0";
+        countdownEl.style.boxShadow = "0 0 20px #0f0";
+      } else if (distance > 60 * 1000) {
+        countdownEl.style.color = "#ffa500";
+        countdownEl.style.boxShadow = "0 0 20px #ffa500";
+      } else {
+        countdownEl.style.color = "#ff0000";
+        countdownEl.style.boxShadow = "0 0 20px #ff0000";
+      }
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    const form = document.getElementById("predictionForm");
+    const resultMessage = document.getElementById("resultMessage");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const now = new Date();
+      if (now > closeTime) {
+        resultMessage.innerHTML = "<div class='alert alert-danger'>انتهى وقت التوقعات!</div>";
+        errorSound.play();
+        return;
+      }
+
+      const name = document.getElementById("name").value.trim();
+      const winner = document.querySelector('input[name="winner"]:checked');
+      const score1 = document.getElementById("score1").value;
+      const score2 = document.getElementById("score2").value;
+
+      if (!name || !winner || score1 === "" || score2 === "") {
+        resultMessage.innerHTML = "<div class='alert alert-warning'>يرجى ملء كل الحقول!</div>";
+        return;
+      }
+
+      const predictions = JSON.parse(localStorage.getItem("predictions") || "[]");
+      if (predictions.some(p => p.name === name)) {
+        resultMessage.innerHTML = "<div class='alert alert-danger'>لقد قمت بالتوقع مسبقًا.</div>";
+        return;
+      }
+
+      const prediction = {
+        name,
+        winner: winner.value,
+        score1,
+        score2,
+        time: new Date().toLocaleString()
+      };
+
+      predictions.push(prediction);
+      localStorage.setItem("predictions", JSON.stringify(predictions));
+
+      resultMessage.innerHTML = "<div class='alert alert-success'>✅ تم حفظ توقعك!</div>";
+      successSound.play();
+      form.reset();
+    });
+
+    function showResults() {
+      document.getElementById("predictionSection").style.display = "none";
+      document.getElementById("resultsSection").style.display = "block";
+
+      const predictions = JSON.parse(localStorage.getItem("predictions") || "[]");
+      const container = document.getElementById("predictionsList");
+
+      if (predictions.length === 0) {
+        container.innerHTML = "<p class='text-warning text-center'>لا توجد توقعات بعد.</p>";
+        return;
+      }
+
+      let html = `<table class="table table-bordered table-striped text-white">
+        <thead class="table-dark">
+          <tr>
+            <th>👤 الاسم</th>
+            <th>🏆 الفائز</th>
+            <th>⚽ النتيجة</th>
+            <th>🕒 الوقت</th>
+          </tr>
+        </thead><tbody>`;
+
+      predictions.forEach(p => {
+        html += `<tr>
+          <td>${p.name}</td>
+          <td>${p.winner}</td>
+          <td>${p.score1} - ${p.score2}</td>
+          <td>${p.time}</td>
+        </tr>`;
+      });
+
+      html += "</tbody></table>";
+      container.innerHTML = html;
+    }
+
+    function showPredictionForm() {
+      document.getElementById("resultsSection").style.display = "none";
+      document.getElementById("predictionSection").style.display = "block";
+    }
+  </script>
+</body>
+</html>
